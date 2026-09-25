@@ -1,3 +1,14 @@
-# Software Engineering Project Starter Code
+# Software Engineering Project
 
-This repo will start you off with an initial configuration that you'll modify as part of Checkpoint 1. As part of the modifications, you'll eventually delete the contents of this README and replace it with documentation for your project.
+## Computation - Prime Factorization
+
+The computation engine accepts a single positive integer as input and computes all of its prime factors in ascending order.
+
+- Input: A single positive integer (84)
+- Output: The list of prime factors whose product equals the input number (2, 2, 3, 7)
+
+This requires looping through trial divisors to break down the number, which becomes CPU-intensive as the input numbers get large.
+
+## System Diagram
+
+![System Architecture Diagram](system-diagram.png)
