@@ -10,3 +10,7 @@ This requires looping through trial divisors to break down the number, which bec
 
 ## System Diagram
 ![System Architecture Diagram](system-diagram.png)
+
+## System Architecture Diagram
+
+![System Architecture Diagram](system-diagram.png)

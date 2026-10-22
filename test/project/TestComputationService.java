@@ -1,15 +1,17 @@
 package project;
 
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import project.model.PrimeFactorizationRequest;
+import project.model.PrimeFactorizationResponse;
 
 public class TestComputationService {
 
     @Test
     public void smokeTestComputationService() {
         ComputationService service = new ComputationServiceImpl();
-        List<Integer> result = service.compute(12);
+        PrimeFactorizationRequest request = new PrimeFactorizationRequest(12);
+        PrimeFactorizationResponse result = service.compute(request);
         Assertions.assertNotNull(result);
     }
 }

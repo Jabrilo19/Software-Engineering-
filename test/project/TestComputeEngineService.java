@@ -4,6 +4,9 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import project.model.PrimeFactorizationResponse;
+import project.model.StorageDestination;
+import project.model.StorageSource;
 
 public class TestComputeEngineService {
 
@@ -13,7 +16,10 @@ public class TestComputeEngineService {
         ComputationService mockComputation = mock(ComputationService.class);
 
         ComputeEngineService engine = new ComputeEngineServiceImpl(mockStorage, mockComputation);
-        String result = engine.compute("input.txt", "output.txt");
+        StorageSource source = new StorageSource("input.txt");
+        StorageDestination destination = new StorageDestination("output.txt");
+
+        PrimeFactorizationResponse result = engine.compute(source, destination);
         Assertions.assertNotNull(result);
     }
 }

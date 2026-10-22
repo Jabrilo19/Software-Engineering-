@@ -1,12 +1,16 @@
 package project;
 
 import project.annotations.NetworkAPI;
+import project.model.NetworkDataRequest;
+import project.model.PrimeFactorizationResponse;
+import project.model.StorageDestination;
+import project.model.StorageSource;
 
 @NetworkAPI
 public interface ComputeEngineService {
-    // runs computation with default delimiters
-    String compute(String inputSource, String outputSource);
+    // Runs computation using source and destination descriptors with default delimiters
+    PrimeFactorizationResponse compute(StorageSource inputSource, StorageDestination outputSource);
 
-    // runs computation with custom delimiters
-    String compute(String inputSource, String outputSource, String pairDelimiter, String itemDelimiter);
+    // Runs computation using request configuration wrapper for custom delimiter specs
+    PrimeFactorizationResponse compute(StorageSource inputSource, StorageDestination outputSource, NetworkDataRequest networkConfig);
 }

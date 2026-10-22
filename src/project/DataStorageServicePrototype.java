@@ -2,13 +2,17 @@ package project;
 
 import java.util.ArrayList;
 import project.annotations.ProcessAPIPrototype;
+import project.model.StorageDestination;
+import project.model.StorageSource;
 
 public class DataStorageServicePrototype {
 
-    // test call to verify data storage process api
+    // test call to verify data storage process api using descriptor objects
     @ProcessAPIPrototype
     public void prototypeClient(DataStorageService service) {
-        service.readInput("input.txt");
-        service.writeOutput("output.txt", new ArrayList<>());
+        StorageSource source = new StorageSource("input.txt");
+        StorageDestination destination = new StorageDestination("output.txt");
+        service.readInput(source);
+        service.writeOutput(destination, new ArrayList<>());
     }
 }
