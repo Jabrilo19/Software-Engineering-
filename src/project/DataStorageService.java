@@ -2,12 +2,15 @@ package project;
 
 import java.util.List;
 import project.annotations.ProcessAPI;
+import project.model.PrimeFactorizationResponse;
+import project.model.StorageDestination;
+import project.model.StorageSource;
 
 @ProcessAPI
 public interface DataStorageService {
-    // reads integer values from the source
-    List<Integer> readInput(String source);
+    // Reads integer values from the configured source descriptor
+    List<Integer> readInput(StorageSource source);
 
-    // writes results to the destination
-    void writeOutput(String destination, List<String> results);
+    // Writes computed factorization results to the destination descriptor
+    void writeOutput(StorageDestination destination, List<PrimeFactorizationResponse> results);
 }
