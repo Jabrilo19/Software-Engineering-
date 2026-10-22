@@ -3,11 +3,14 @@ package project;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import project.model.PrimeFactorizationResponse;
+import project.model.StorageDestination;
+import project.model.StorageSource;
 
 public class InMemoryDataStorageService implements DataStorageService {
 
     private final List<Integer> inputData;
-    private final List<String> outputData;
+    private final List<PrimeFactorizationResponse> outputData;
 
     public InMemoryDataStorageService(List<Integer> inputData) {
         this.inputData = new ArrayList<>(inputData);
@@ -19,16 +22,18 @@ public class InMemoryDataStorageService implements DataStorageService {
     }
 
     @Override
-    public List<Integer> readInput(String source) {
+    public List<Integer> readInput(StorageSource source) {
         return Collections.unmodifiableList(inputData);
     }
 
     @Override
-    public void writeOutput(String destination, List<String> results) {
-        outputData.addAll(results);
+    public void writeOutput(StorageDestination destination, List<PrimeFactorizationResponse> results) {
+        if (results != null) {
+            outputData.addAll(results);
+        }
     }
 
-    public List<String> getOutputData() {
+    public List<PrimeFactorizationResponse> getOutputData() {
         return Collections.unmodifiableList(outputData);
     }
 }
