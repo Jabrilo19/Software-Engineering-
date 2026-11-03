@@ -1,5 +1,10 @@
 package project;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import project.model.PrimeFactorizationResponse;
@@ -10,11 +15,72 @@ public class DataStorageServiceImpl implements DataStorageService {
 
     @Override
     public List<Integer> readInput(StorageSource source) {
-        return Collections.emptyList();
+        if (source == null || source.getLocation() == null) {
+            return Collections.emptyList();
+        }
+
+        Path path = Paths.get(source.getLocation());
+        if (!Files.exists(path)) {
+            return Collections.emptyList();
+        }
+
+        List<Integer> numbers = new ArrayList<>();
+        try {
+            List<String> lines = Files.readAllLines(path);
+            for (String line : lines) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty()) {
+                    continue;
+                }
+                String[] tokens = trimmed.split("[,\\s]+");
+                for (String token : tokens) {
+                    if (!token.isEmpty()) {
+                        numbers.add(Integer.parseInt(token));
+                    }
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            return Collections.emptyList();
+        }
+
+        return numbers;
     }
 
     @Override
     public void writeOutput(StorageDestination destination, List<PrimeFactorizationResponse> results) {
-        // empty stub implementation
+        if (destination == null || destination.getLocation() == null || results == null) {
+            return;
+        }
+
+        Path path = Paths.get(destination.getLocation());
+        List<String> formattedResults = new ArrayList<>();
+
+        for (PrimeFactorizationResponse response : results) {
+            if (response != null && response.getFactors() != null) {
+                List<Integer> factors = response.getFactors();
+                if (factors.isEmpty()) {
+                    formattedResults.add("none");
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < factors.size(); i++) {
+                        sb.append(factors.get(i));
+                        if (i < factors.size() - 1) {
+                            sb.append("*");
+                        }
+                    }
+                    formattedResults.add(sb.toString());
+                }
+            }
+        }
+
+        String outputLine = String.join(",", formattedResults);
+        try {
+            if (path.getParent() != null) {
+                Files.createDirectories(path.getParent());
+            }
+            Files.writeString(path, outputLine);
+        } catch (IOException e) {
+            // Handled silently per service contract
+        }
     }
 }
