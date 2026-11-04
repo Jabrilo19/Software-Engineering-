@@ -21,23 +21,27 @@ public class ComputeEngineServiceImpl implements ComputeEngineService {
 
     @Override
     public PrimeFactorizationResponse compute(StorageSource inputSource, StorageDestination outputSource) {
-        if (inputSource == null || outputSource == null) {
+        try {
+            if (inputSource == null || outputSource == null) {
+                return new PrimeFactorizationResponse(new ArrayList<>());
+            }
+
+            List<Integer> inputs = dataStorageService.readInput(inputSource);
+            if (inputs == null) {
+                inputs = new ArrayList<>();
+            }
+
+            List<PrimeFactorizationResponse> responses = new ArrayList<>();
+            for (Integer num : inputs) {
+                if (num != null) {
+                    responses.add(computationService.compute(new PrimeFactorizationRequest(num)));
+                }
+            }
+            dataStorageService.writeOutput(outputSource, responses);
+            return responses.isEmpty() ? new PrimeFactorizationResponse(new ArrayList<>()) : responses.get(responses.size() - 1);
+        } catch (Exception expected) {
             return new PrimeFactorizationResponse(new ArrayList<>());
         }
-
-        List<Integer> inputs = dataStorageService.readInput(inputSource);
-        if (inputs == null) {
-            inputs = new ArrayList<>();
-        }
-
-        List<PrimeFactorizationResponse> responses = new ArrayList<>();
-        for (Integer num : inputs) {
-            if (num != null) {
-                responses.add(computationService.compute(new PrimeFactorizationRequest(num)));
-            }
-        }
-        dataStorageService.writeOutput(outputSource, responses);
-        return responses.isEmpty() ? new PrimeFactorizationResponse(new ArrayList<>()) : responses.get(responses.size() - 1);
     }
 
     @Override
