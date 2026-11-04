@@ -37,8 +37,8 @@ public class ExceptionHandlingIntegrationTest {
             new ComputationServiceImpl()
         );
 
-        StorageSource source = () -> "dummy-source";
-        StorageDestination dest = () -> "dummy-dest";
+        StorageSource source = new StorageSource("dummy-source");
+        StorageDestination dest = new StorageDestination("dummy-dest");
 
         PrimeFactorizationResponse response = Assertions.assertDoesNotThrow(() -> engine.compute(source, dest));
         Assertions.assertNotNull(response);
@@ -64,8 +64,8 @@ public class ExceptionHandlingIntegrationTest {
             new BrokenComputationService()
         );
 
-        StorageSource source = () -> "dummy-source";
-        StorageDestination dest = () -> "dummy-dest";
+        StorageSource source = new StorageSource("dummy-source");
+        StorageDestination dest = new StorageDestination("dummy-dest");
 
         PrimeFactorizationResponse response = Assertions.assertDoesNotThrow(() -> engine.compute(source, dest));
         Assertions.assertNotNull(response);
