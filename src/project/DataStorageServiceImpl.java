@@ -79,8 +79,7 @@ public class DataStorageServiceImpl implements DataStorageService {
                 Files.createDirectories(path.getParent());
             }
             Files.writeString(path, outputLine);
-        } catch (IOException e) {
-            // Handled silently per service contract
+        } catch (IOException expected) {
         }
     }
 }
