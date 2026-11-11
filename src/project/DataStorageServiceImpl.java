@@ -19,13 +19,13 @@ public class DataStorageServiceImpl implements DataStorageService {
             return Collections.emptyList();
         }
 
-        Path path = Paths.get(source.getLocation());
-        if (!Files.exists(path)) {
-            return Collections.emptyList();
-        }
-
-        List<Integer> numbers = new ArrayList<>();
         try {
+            Path path = Paths.get(source.getLocation());
+            if (!Files.exists(path)) {
+                return Collections.emptyList();
+            }
+
+            List<Integer> numbers = new ArrayList<>();
             List<String> lines = Files.readAllLines(path);
             for (String line : lines) {
                 String trimmed = line.trim();
@@ -39,11 +39,11 @@ public class DataStorageServiceImpl implements DataStorageService {
                     }
                 }
             }
-        } catch (IOException | NumberFormatException e) {
+            return numbers;
+        } catch (Exception expected) {
+            // Catches IOException, NumberFormatException, InvalidPathException, SecurityException
             return Collections.emptyList();
         }
-
-        return numbers;
     }
 
     @Override
@@ -52,34 +52,36 @@ public class DataStorageServiceImpl implements DataStorageService {
             return;
         }
 
-        Path path = Paths.get(destination.getLocation());
-        List<String> formattedResults = new ArrayList<>();
+        try {
+            Path path = Paths.get(destination.getLocation());
+            List<String> formattedResults = new ArrayList<>();
 
-        for (PrimeFactorizationResponse response : results) {
-            if (response != null && response.getFactors() != null) {
-                List<Integer> factors = response.getFactors();
-                if (factors.isEmpty()) {
-                    formattedResults.add("none");
-                } else {
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < factors.size(); i++) {
-                        sb.append(factors.get(i));
-                        if (i < factors.size() - 1) {
-                            sb.append("*");
+            for (PrimeFactorizationResponse response : results) {
+                if (response != null && response.getFactors() != null) {
+                    List<Integer> factors = response.getFactors();
+                    if (factors.isEmpty()) {
+                        formattedResults.add("none");
+                    } else {
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < factors.size(); i++) {
+                            sb.append(factors.get(i));
+                            if (i < factors.size() - 1) {
+                                sb.append("*");
+                            }
                         }
+                        formattedResults.add(sb.toString());
                     }
-                    formattedResults.add(sb.toString());
                 }
             }
-        }
 
-        String outputLine = String.join(",", formattedResults);
-        try {
+            String outputLine = String.join(",", formattedResults);
             if (path.getParent() != null) {
                 Files.createDirectories(path.getParent());
             }
             Files.writeString(path, outputLine);
-        } catch (IOException expected) {
+        } catch (Exception expected) {
+            // Safely swallows unexpected file or path runtime exceptions (e.g. InvalidPathException, SecurityException)
+            // at the storage boundary without propagating unhandled exceptions.
         }
     }
 }
