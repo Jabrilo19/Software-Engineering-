@@ -30,6 +30,5 @@ dependencies {
 test {
     useJUnitPlatform()
     filter {
-        includeTestsMatching "*Checkpoint*"
     }
 }
