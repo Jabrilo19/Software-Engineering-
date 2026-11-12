@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import project.ComputationService;
 import project.ComputationServiceImpl;
 import project.ComputeEngineService;
-import project.ComputeEngineServiceImpl;
 import project.DataStorageService;
 import project.DataStorageServiceImpl;
+import project.MultiThreadedComputeEngineServiceImpl;
 
 public class TestMultiUser {
 
@@ -26,7 +26,7 @@ public class TestMultiUser {
     public void initializeComputeEngine() {
         DataStorageService dataStorageService = new DataStorageServiceImpl();
         ComputationService computationService = new ComputationServiceImpl();
-        coordinator = new ComputeEngineServiceImpl(dataStorageService, computationService);
+        coordinator = new MultiThreadedComputeEngineServiceImpl(dataStorageService, computationService);
     }
 
     @Test
