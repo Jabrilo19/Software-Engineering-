@@ -1,6 +1,5 @@
 package project;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,7 +40,6 @@ public class DataStorageServiceImpl implements DataStorageService {
             }
             return numbers;
         } catch (Exception expected) {
-            // Catches IOException, NumberFormatException, InvalidPathException, SecurityException
             return Collections.emptyList();
         }
     }
@@ -74,14 +72,13 @@ public class DataStorageServiceImpl implements DataStorageService {
                 }
             }
 
-            String outputLine = String.join(",", formattedResults);
+            String delimiter = destination.getDelimiter() != null ? destination.getDelimiter() : ",";
+            String outputLine = String.join(delimiter, formattedResults);
             if (path.getParent() != null) {
                 Files.createDirectories(path.getParent());
             }
             Files.writeString(path, outputLine);
         } catch (Exception expected) {
-            // Safely swallows unexpected file or path runtime exceptions (e.g. InvalidPathException, SecurityException)
-            // at the storage boundary without propagating unhandled exceptions.
         }
     }
 }
