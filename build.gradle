@@ -1,17 +1,28 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'com.google.protobuf' version '0.9.4'
+}
 
-eclipse.project.name = 'Checkpoint_1' 
+eclipse.project.name = 'Checkpoint_1'
+
+def grpcVersion = '1.62.2'
+def protobufVersion = '3.25.3'
 
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDir 'src'
+            srcDir 'build/generated/source/proto/main/java'
+            srcDir 'build/generated/source/proto/main/grpc'
+        }
+        proto {
+            srcDir 'src/proto'
         }
     }
     test {
         java {
-            srcDirs = ['test']
+            srcDir 'test'
         }
     }
 }
@@ -21,11 +32,36 @@ repositories {
 }
 
 dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter:5.10.2')
-    testImplementation('org.mockito:mockito-core:5.10.0')
-    testImplementation('fr.inria.gforge.spoon:spoon-core:10.4.2')
-    implementation('com.google.code.gson:gson:2.13.1')
+    implementation "io.grpc:grpc-netty-shaded:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    implementation "com.google.protobuf:protobuf-java:${protobufVersion}"
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+    implementation 'com.google.code.gson:gson:2.13.1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.10.0'
+    testImplementation 'fr.inria.gforge.spoon:spoon-core:10.4.2'
+    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
 }
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${protobufVersion}"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+compileJava.dependsOn generateProto
 
 test {
     useJUnitPlatform()

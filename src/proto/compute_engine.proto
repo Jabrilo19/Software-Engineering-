@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package project.grpc;
+
+option java_multiple_files = true;
+option java_package = "project.grpc";
+option java_outer_classname = "ComputeEngineProto";
+
+service DataStorageGrpcService {
+  rpc ReadInput (ReadInputRequest) returns (ReadInputResponse);
+  rpc WriteOutput (WriteOutputRequest) returns (WriteOutputResponse);
+}
+
+message ReadInputRequest {
+  string source_location = 1;
+}
+
+message ReadInputResponse {
+  repeated int32 numbers = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+message FactorList {
+  repeated int32 factors = 1;
+}
+
+message WriteOutputRequest {
+  string destination_location = 1;
+  repeated FactorList results = 2;
+  string delimiter = 3;
+}
+
+message WriteOutputResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+service ComputeEngineGrpcService {
+  rpc Compute (ComputeRequest) returns (ComputeResponse);
+}
+
+message ComputeRequest {
+  oneof input_source {
+    string input_file_path = 1;
+    NumberList inline_numbers = 2;
+  }
+  string output_file_path = 3;
+  string delimiter = 4;
+}
+
+message NumberList {
+  repeated int32 numbers = 1;
+}
+
+message ComputeResponse {
+  bool success = 1;
+  string status_message = 2;
+  repeated string formatted_results = 3;
+}

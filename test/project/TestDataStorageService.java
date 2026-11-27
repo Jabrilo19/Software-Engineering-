@@ -3,6 +3,7 @@ package project;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import project.grpc.GrpcDataStorageServiceClient;
 import project.model.StorageSource;
 
 public class TestDataStorageService {
@@ -13,6 +14,13 @@ public class TestDataStorageService {
         StorageSource source = new StorageSource("input.txt");
         List<Integer> result = service.readInput(source);
         Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void smokeTestGrpcDataStorageServiceClient() throws Exception {
+        try (GrpcDataStorageServiceClient client = new GrpcDataStorageServiceClient("localhost", 50051)) {
+            Assertions.assertNotNull(client);
+        }
     }
 
     @Test
